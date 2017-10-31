@@ -1,0 +1,41 @@
+# Define the port where the API gateway server would be running
+server:
+  port: 8765
+
+# Define the routes which determine what URL are serviced by what applications.
+# The application/services are defined in the bootstrap.yml file of individual applications
+# using the spring.application.name property.
+
+# Note that we don't proxy the calls to the authorization server. The reason being that
+# Spring cloud security would need to secure the api gateway before it can route the
+# requests using zuul
+zuul:
+  ignoredServices: '*'
+  routes:
+    expense-service:
+      path: /expense-service/**
+      stripPrefix: false
+      serviceId: expense-service
+      sensitiveHeaders:
+    ui:
+      path: /**
+      stripPrefix: false
+      serviceId: portal
+
+# Since our gateway is using Eureka (@EnableEurekaClient), the Gateway using Netfix Ribbon to make
+# the actual call. The ribbon call is wrapped within Hystrix so that we can handle any errors.
+# Hystrix has low delay tolerance threshold and hence we bump it to 5 seconds.
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          semaphore:
+            timeoutInMilliseconds: 5000
+
+# Define the Eureka server that handles service registration
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
