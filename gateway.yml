@@ -17,7 +17,7 @@ zuul:
       stripPrefix: false
       serviceId: expense-service
       sensitiveHeaders:
-    ui:
+    portal:
       path: /portal/**
       stripPrefix: false
       serviceId: portal
