@@ -13,7 +13,7 @@ zuul:
   ignoredServices: '*'
   routes:
     expense-service:
-      path: /expense-service/**
+      path: /expense/**
       stripPrefix: false
       serviceId: expense-service
       sensitiveHeaders:
@@ -39,3 +39,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+# Security section
+security:
+  user:
+    password: none
+  sessions: NEVER
